@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/darkly/bootstrap.min.css"
+        />
+        <link rel="stylesheet" href="/static/style.css" />
+        {% block title %}{% endblock %}
+    </head>
+    <body>
+        <div class="navbar navbar-light bg-light">
+            <a class="navbar-brand">Authorization Exercise</a>
+            <!-- <form class="form-inline">
+                <input
+                    class="form-control mr-sm-2"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                />
+                <button
+                    class="btn btn-outline-success my-2 my-sm-0"
+                    type="submit"
+                >
+                    Search
+                </button>
+            </form> -->
+        </div>
+        <div class="container">
+            {% for msg in get_flashed_messages() %}
+            <div class="alert alert-danger">{{ msg }}</div>
+            {% endfor %} {%block content%}{%endblock%}
+        </div>
+    </body>
+</html>
