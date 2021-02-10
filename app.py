@@ -43,7 +43,11 @@ def register():
         first_name = form.first_name.data
         last_name = form.last_name.data
 
-        user = User(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+        # generate hashed password with bcrypt
+        user = User.register(username, password)
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
 
         db.session.add(user)
         db.session.commit()
