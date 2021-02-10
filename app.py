@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, request, redirect, render_template, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User
-from forms import RegisterForm, LoginForm
+from forms import RegisterForm, LoginForm, UserForm
 
 load_dotenv()
 app = Flask(__name__)
@@ -65,19 +65,23 @@ def register():
         # provide user confirmation registration successful
         flash(f" Added user {username}")
         # redirect to protected page(s)
-        return redirect("/secret")
+        return redirect(f"/users/{username}")
     else:  # if here: validation error or GET request
         return render_template("register.html", form=form)
 
 
-@app.route("/secret")
-def secret():
+@app.route("/users/<username>")
+def secret_pages(username):
     """ Access to protected pages """
     if "username" not in session:
         flash(f"You must be logged in to continue")
         return redirect("/login")
     else:
-        return "You Made It!"
+        # create form
+        user = User.query.filter_by(username=username).first()
+        form = UserForm(obj=user)
+
+        return render_template("user-information.html", form=form)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -96,10 +100,19 @@ def login():
         user = User.login(username, password)
         # if username and password match, store username, see to protected page(s)
         if user:  # contains found user object or False
+            # set session data key "username" to contain logged in username
             session["username"] = user.username
-            return redirect("/secret")
+            return redirect(f"/users/{username}")
         else:
-            # inform user bad input
+            # inform user of bad input
             form.username.errors = ["Invalid username / password"]
     # here if either GET route or bad input to login form
     return render_template("login.html", form=form)
+
+
+@app.route("/logout")
+def logout():
+    """Log out user"""
+    if "username" in session:
+        session.pop("username")
+    return redirect("/")
