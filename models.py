@@ -32,3 +32,12 @@ class User(db.Model):
         # change from b string to utf8 string
         hashed_password = hashed_password.decode("utf8")
         return cls(username=username, password=hashed_password)
+
+    @classmethod
+    def login(cls, username, password):
+        # check username / password
+        user = User.query.filter_by(username=username).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            return user
+        else:
+            return False
