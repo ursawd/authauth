@@ -23,15 +23,15 @@
     <h4 class="mt-4">
         Feedback Posts
         <span
-            ><a href=""
+            ><a href="/users/{{form.username.data}}/feedback/add"
                 ><button class="btn-sm btn-light">Post Feedback</button></a
             >
         </span>
     </h4>
-
+    <br />
     {%for item in feedback%}
     <div class="feedback-item">
-        <p>{{item.title}}</p>
+        <p class="font-weight-bold">{{item.title}}</p>
         <form
             class="d-inline"
             action="/feedback/{{item.id}}/update"

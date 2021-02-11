@@ -21,3 +21,8 @@ class UserForm(FlaskForm):
     email = StringField("Email")
     first_name = StringField("First Name")
     last_name = StringField("Last Name")
+
+
+class FeedbackForm(FlaskForm):
+    title = StringField("Title", validators=[InputRequired()])
+    content = StringField("Content", validators=[InputRequired()])

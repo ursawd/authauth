@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, request, redirect, render_template, flash, session, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Feedback
-from forms import RegisterForm, LoginForm, UserForm
+from forms import RegisterForm, LoginForm, UserForm, FeedbackForm
 
 load_dotenv()
 app = Flask(__name__)
@@ -132,3 +132,26 @@ def delete_user(username):
     db.session.commit()
 
     return redirect("/")
+
+
+@app.route("/users/<username>/feedback/add", methods=["GET", "POST"])
+def add_feedback(username):
+    """ show form add feedback for user to db"""
+    form = FeedbackForm()
+
+    if "username" not in session:
+        flash(f"You must be logged in to continue")
+        return redirect("/login")
+
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+
+        feedback = Feedback(title=title, content=content, username=username)
+
+        db.session.add(feedback)
+        db.session.commit()
+
+        return redirect(f"/users/{username}")
+
+    return render_template("feedback.html", form=form)
