@@ -12,4 +12,30 @@
     {% endfor %}
 </form>
 
+<form action="/users/{{form.username}}/delete" method="post">
+    <button type="submit">Delete User</button>
+</form>
+
+<div class="feedback-container">
+    <h4 class="mt-4">
+        Feedback Posts
+        <span
+            ><a href=""
+                ><button class="btn-sm btn-light">Post Feedback</button></a
+            >
+        </span>
+    </h4>
+
+    {%for item in feedback%}
+    <div class="feedback-item">
+        <p>{{item.title}}</p>
+        <form action="/users/{{form.username}}/delete" method="post">
+            <input type="button" value="" />
+        </form>
+        <p>{{item.content}}</p>
+
+        <hr />
+    </div>
+    {% endfor%}
+</div>
 {% endblock %}

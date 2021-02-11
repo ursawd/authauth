@@ -1,3 +1,6 @@
 label {
     width: 80px;
 }
+hr {
+    border-top: 1px solid #555;
+}

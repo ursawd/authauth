@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, request, redirect, render_template, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
+from models import db, connect_db, User, Feedback
 from forms import RegisterForm, LoginForm, UserForm
 
 load_dotenv()
@@ -80,8 +80,8 @@ def secret_pages(username):
         # create form
         user = User.query.filter_by(username=username).first()
         form = UserForm(obj=user)
-
-        return render_template("user-information.html", form=form)
+        feedback_list = Feedback.query.filter_by(username=user.username)
+        return render_template("user-information.html", form=form, feedback=feedback_list)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -115,4 +115,18 @@ def logout():
     """Log out user"""
     if "username" in session:
         session.pop("username")
+    return redirect("/")
+
+
+@app.route("/users/<username>/delete", methods=["POST"])
+def delete_user(username):
+    """Delete User"""
+    if "username" not in session:
+        flash(f"You must be logged in to continue")
+        return redirect("/login")
+
+    user = User.query.filter_by(username=username).first()
+    raise
+    # db.session.delete(user)
+    # db.session.commit()
     return redirect("/")
