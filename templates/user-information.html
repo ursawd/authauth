@@ -12,8 +12,11 @@
     {% endfor %}
 </form>
 
-<form action="/users/{{form.username}}/delete" method="post">
-    <button type="submit">Delete User</button>
+<form
+    action="{{url_for('delete_user',username=form.username.data)}}"
+    method="post"
+>
+    <button class="btn btn-danger btn-sm" type="submit">Delete User</button>
 </form>
 
 <div class="feedback-container">
@@ -29,10 +32,30 @@
     {%for item in feedback%}
     <div class="feedback-item">
         <p>{{item.title}}</p>
-        <form action="/users/{{form.username}}/delete" method="post">
-            <input type="button" value="" />
+        <form
+            class="d-inline"
+            action="/feedback/{{item.id}}/update"
+            method="GET"
+        >
+            <input
+                class="py-0 px-2 btn btn-info btn.sm"
+                type="submit"
+                value="Edit"
+            />
         </form>
-        <p>{{item.content}}</p>
+        <form
+            class="d-inline"
+            action="/feedback/{{item.id}}/delete"
+            method="POST"
+        >
+            <input
+                class="p-0 btn btn-warning btn.sm"
+                type="submit"
+                value="Delete"
+            />
+        </form>
+
+        <p class="mt-2">{{item.content}}</p>
 
         <hr />
     </div>

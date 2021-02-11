@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, request, redirect, render_template, flash, session
+from flask import Flask, request, redirect, render_template, flash, session, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Feedback
 from forms import RegisterForm, LoginForm, UserForm
@@ -121,12 +121,14 @@ def logout():
 @app.route("/users/<username>/delete", methods=["POST"])
 def delete_user(username):
     """Delete User"""
+
     if "username" not in session:
         flash(f"You must be logged in to continue")
         return redirect("/login")
-
+    session.pop("username")
     user = User.query.filter_by(username=username).first()
-    raise
-    # db.session.delete(user)
-    # db.session.commit()
+
+    db.session.delete(user)
+    db.session.commit()
+
     return redirect("/")

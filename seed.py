@@ -1,4 +1,8 @@
-"""Seed file to make sample data for authauth.users table"""
+"""Seed file to make sample data for authauth.users and feedback tables.
+   Database authauth must exist before running this file.
+   defined in app.py():
+   app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///authauth"
+"""
 
 from models import db, User, Feedback
 from app import app
