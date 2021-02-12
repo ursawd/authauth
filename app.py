@@ -17,7 +17,13 @@ app.config["SQLALCHEMY_ECHO"] = True
 connect_db(app)
 
 # *****************************************************
+
+# *****************************************************
 # routes
+@app.errorhandler(404)
+def not_found(e):
+    """404 error handler"""
+    return render_template("404.html")
 
 
 @app.route("/")
@@ -76,12 +82,12 @@ def secret_pages(username):
     if "username" not in session:
         flash(f"You must be logged in to continue")
         return redirect("/login")
-    else:
-        # create form
-        user = User.query.filter_by(username=username).first()
-        form = UserForm(obj=user)
-        feedback_list = Feedback.query.filter_by(username=user.username)
-        return render_template("user-information.html", form=form, feedback=feedback_list)
+
+    # create form
+    user = User.query.filter_by(username=username).first()
+    form = UserForm(obj=user)
+    feedback_list = Feedback.query.filter_by(username=user.username)
+    return render_template("user-information.html", form=form, feedback=feedback_list)
 
 
 @app.route("/login", methods=["GET", "POST"])
