@@ -155,3 +155,40 @@ def add_feedback(username):
         return redirect(f"/users/{username}")
 
     return render_template("feedback.html", form=form)
+
+
+@app.route("/feedback/<feedback_id>/delete", methods=["POST"])
+def delete_feedback(feedback_id):
+    """Delete feedback entry"""
+
+    if "username" not in session:
+        flash(f"You must be logged in to continue")
+        return redirect("/login")
+
+    entry = Feedback.query.get_or_404(feedback_id)
+    db.session.delete(entry)
+    db.session.commit()
+
+    return redirect(f"/users/{entry.username}")
+
+
+@app.route("/feedback/<feedback_id>/update", methods=["GET", "POST"])
+def update_feedback(feedback_id):
+    """Update a feedback entry"""
+
+    if "username" not in session:
+        flash(f"You must be logged in to continue")
+        return redirect("/login")
+
+    entry = Feedback.query.get_or_404(feedback_id)
+    form = FeedbackForm(obj=entry)
+
+    if form.validate_on_submit():
+        entry.title = form.title.data
+        entry.content = form.content.data
+
+        db.session.add(entry)
+        db.session.commit()
+
+        return redirect(f"/users/{entry.username}")
+    return render_template("edit-feedback.html", form=form)
